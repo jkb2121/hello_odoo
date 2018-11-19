@@ -95,7 +95,7 @@ pj = {
         'type': 'product',
         'name': 'Nagoya Nightstand',
         'attribute_ids': [1],               # Finish
-        'attribute_value_ids': [1, 2],      # Caramelized, Sable
+        'attribute_value_ids': [1, 2, 4],      # Caramelized, Sable, Dark Walnut
         'variants': [
             {
                 'code': 'F-NS-CARA',
@@ -108,18 +108,75 @@ pj = {
                 'type': 'product',
                 'attribute_ids': [1],
                 'attribute_value_ids': [2]
+            },
+            {
+                'code': 'F-NS-DWAL',
+                'type': 'product',
+                'attribute_ids': [1],
+                'attribute_value_ids': [4]
             }
+
         ]
     }
 }
 
-
 print("Product: {}".format(pj['product']['id']))
 print("SKU 1: {}".format(pj['product']['variants'][0]['code']))
 print("SKU 2: {}".format(pj['product']['variants'][1]['code']))
+print("SKU 2: {}".format(pj['product']['variants'][2]['code']))
+
+
+def build_odoo_product_from_json(o_db, o_uid, o_pw, j):
+    print("Building Odoo Product from JSON")
+
+    # Create the "Product" via the Product.Template
+    prod_tmpl_id = models.execute_kw(o_db, o_uid, o_pw, 'product.template', 'create', [{
+        'name': j['product']['name'],
+        'type': j['product']['type'],
+        'attribute_line_id': j['product']['attribute_ids'][0],
+        'attribute_value_ids': [(6, 0, j['product']['variants'][0]['attribute_value_ids'][0])]
+    }])
+    print("Product Template ID: {}".format(prod_tmpl_id))
+
+    # Create Product Attributes
+    attribute_line = models.execute_kw(o_db, o_uid, o_pw, 'product.attribute.line', 'create', [{
+        'product_tmpl_id': int(prod_tmpl_id),
+        'attribute_id': j['product']['attribute_ids'][0],
+        'value_ids': [(6, 0, j['product']['attribute_value_ids'])]
+    }])
+    print("Attribute_Line: {}".format(attribute_line))
+
+    # Get the Product ID Created by the Template
+    sku_output = models.execute_kw(o_db, o_uid, o_pw, 'product.template', 'search_read',
+                                   [[['id', '=', prod_tmpl_id]]],
+                                   {'fields': ['product_variant_ids']}
+                                   )
+    sku1 = sku_output[0]['product_variant_ids'][0]
+
+    i = 0
+    for variant in j['product']['variants']:
+
+        if i == 0:
+            # Write the First Variant (created by default)
+            models.execute_kw(o_db, o_uid, o_pw, 'product.product', 'write', [[sku1], {
+                'default_code': variant['code'],
+                'code': variant['code'],
+                'attribute_value_ids': [(6, 0, variant['attribute_value_ids'])]
+            }])
+        else:
+            sku2 = models.execute_kw(o_db, o_uid, o_pw, 'product.product', 'create', [{
+                'default_code': variant['code'],
+                'code': variant['code'],
+                'product_tmpl_id': prod_tmpl_id,
+                'type': 'product',
+                'attribute_line_id': j['product']['attribute_ids'][0],
+                'attribute_value_ids': [(6, 0, variant['attribute_value_ids'])]
+            }])
+
+        i += 1
 
 
 
-
+build_odoo_product_from_json(o_database, uid, o_password, pj)
 
 
