@@ -1,6 +1,9 @@
 from xmlrpc.client import ServerProxy
 import yaml
 import sys
+import pprint
+
+
 
 import experiments
 
@@ -62,7 +65,61 @@ def dump_item_data(o_db, o_uid, o_pw, filters=[], fields=''):
     print("---------------------------------------------------")
     return output
 
-dump_item_data(o_database, uid, o_password, [[['id','=', '1104']]])
-dump_item_data(o_database, uid, o_password, [[['id','=', '1104']]], 'all')
+# dump_item_data(o_database, uid, o_password, [[['id','=', '1104']]])
+# dump_item_data(o_database, uid, o_password, [[['id','=', '1104']]], 'all')
+
+
+#
+# With the SKU ID (product variant ID, I suppose), I should be able to update any fields that I want on that object.
+# Kind of clumsy because I don't think I have the syntax just right for the "code = sku" in the filter section.
+#
+def get_id_by_sku(o_db, o_uid, o_pw, sku):
+    output = models.execute_kw(o_db, o_uid, o_pw,
+                               'product.product', 'search_read',
+                               [[['code', '=', sku]]],
+                               {'fields': ['id', 'code']})
+    pprint.pprint(output)
+    for o in output:
+        if o["code"] == sku:
+            return o["id"]
+
+    return -1
+
+sku_id = get_id_by_sku(o_database, uid, o_password, 'F-MIRR-CARA')
+print("SKU ID: {}".format(sku_id))
+
+# This is the example JSON I want to build:
+pj = {
+    'product': {
+        'id': 12345,
+        'type': 'product',
+        'name': 'Nagoya Nightstand',
+        'attribute_ids': [1],               # Finish
+        'attribute_value_ids': [1, 2],      # Caramelized, Sable
+        'variants': [
+            {
+                'code': 'F-NS-CARA',
+                'type': 'product',
+                'attribute_ids': [1],
+                'attribute_value_ids': [1]
+            },
+            {
+                'code': 'F-NS-SABL',
+                'type': 'product',
+                'attribute_ids': [1],
+                'attribute_value_ids': [2]
+            }
+        ]
+    }
+}
+
+
+print("Product: {}".format(pj['product']['id']))
+print("SKU 1: {}".format(pj['product']['variants'][0]['code']))
+print("SKU 2: {}".format(pj['product']['variants'][1]['code']))
+
+
+
+
 
 
