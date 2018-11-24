@@ -30,13 +30,15 @@ This is my "Hello World" experimenting with Odoo's API's.  Also a stash of my no
 * [Odoo Online XML-RPC Note](https://www.odoo.com/fr_FR/forum/aide-1/question/is-xmlrpc-enabled-on-evaluation-servers-81494)
 
 ## TODO:
-* Of course, add and commit the Odoo Code...
-* Maybe split the "Todo" into a deep backlog versus next steps
-* Import an item with multiple attributes/variations
+* ~~Create attributes and attribute values~~
+* ~~Create a class for doing the work versus a ton of functions in hello_odoo.py~~
+* Create an item with multiple attributes/variations
+* Build the JSON format for importing the items
+* Import a bunch of data from JSON
 * Describe the process to test with the JSON data
 * Figure out what's up with Odoo ORM and/or the Odoo "high level" openerp (Referenced [here](https://doc.odoo.com/trunk/web/rpc)) Python libraries--is that a thing?
 * Review in more detail: [Odoo ORM Page](https://www.odoo.com/documentation/11.0/reference/orm.html)
 * Same deal with "low-level" [here](https://doc.odoo.com/trunk/web/rpc#low-level-api-rpc-calls-to-python-side)
 * What's the name of the bitnami odoo image?
 * What is Odoo "erppeek"?  Referenced [here](https://github.com/Yenthe666/InstallScript/issues/88)
-
+* Maybe split the "Todo" into a deep backlog versus next steps

@@ -5,7 +5,7 @@ import pprint
 
 
 
-import experiments
+from experiments.attribute_builder import attribute_builder
 
 o_hostname = ''
 o_username = ''
@@ -85,8 +85,8 @@ def get_id_by_sku(o_db, o_uid, o_pw, sku):
 
     return -1
 
-sku_id = get_id_by_sku(o_database, uid, o_password, 'F-MIRR-CARA')
-print("SKU ID: {}".format(sku_id))
+# sku_id = get_id_by_sku(o_database, uid, o_password, 'F-MIRR-CARA')
+# print("SKU ID: {}".format(sku_id))
 
 # This is the example JSON I want to build:
 pj = {
@@ -120,10 +120,10 @@ pj = {
     }
 }
 
-print("Product: {}".format(pj['product']['id']))
-print("SKU 1: {}".format(pj['product']['variants'][0]['code']))
-print("SKU 2: {}".format(pj['product']['variants'][1]['code']))
-print("SKU 2: {}".format(pj['product']['variants'][2]['code']))
+# print("Product: {}".format(pj['product']['id']))
+# print("SKU 1: {}".format(pj['product']['variants'][0]['code']))
+# print("SKU 2: {}".format(pj['product']['variants'][1]['code']))
+# print("SKU 2: {}".format(pj['product']['variants'][2]['code']))
 
 
 def build_odoo_product_from_json(o_db, o_uid, o_pw, j):
@@ -175,8 +175,24 @@ def build_odoo_product_from_json(o_db, o_uid, o_pw, j):
 
         i += 1
 
+# build_odoo_product_from_json(o_database, uid, o_password, pj)
 
+ab = attribute_builder(o_hostname, o_database, o_username, o_password)
+# ab.dump_attributes()
 
-build_odoo_product_from_json(o_database, uid, o_password, pj)
+# if ab.attribute_exists("Size"):
+#     print("Size Exists")
+# else:
+#     print("Size does not Exist")
+# ab.create_attribute("Size")
 
+print("Attribute ID for Finish: {}".format(ab.get_attribute_id("Finish")))
+print("Attribute ID for Size: {}".format(ab.get_attribute_id("Size")))
 
+# ab.dump_attribute_values()
+
+# ab.create_attribute_value(1, "Hemlock")
+# ab.dump_attribute_values()
+
+print("Attribute Value ID for Finish:Hemlock: {}".format(ab.get_attribute_value_id(1, "Hemlock")))
+print("Attribute Value ID for Size:XL: {}".format(ab.get_attribute_value_id(2, "XL")))
