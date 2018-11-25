@@ -33,13 +33,13 @@ else:
 # Checking the Odoo version is a good test to see if connection over XML-RPC works, so at least get that out of the
 # way before troubleshooting authentication problems next.
 common = ServerProxy('https://{}/xmlrpc/2/common'.format(o_hostname))
-print("Version: {}".format(common.version()))
+# print("Version: {}".format(common.version()))
 
 # Login seems to do the same as authenticate (below).
 # uid = common.login(o_database, o_username, o_password)
 
 uid = common.authenticate(o_database, o_username, o_password, {})
-print("authenticate: usermane={}, password={}, UID: {}".format(o_username, o_password, uid))
+# print("authenticate: usermane={}, password={}, UID: {}".format(o_username, o_password, uid))
 if uid is False:
     print("Credentials Error, check username and password!")
     exit(1)
@@ -177,22 +177,36 @@ def build_odoo_product_from_json(o_db, o_uid, o_pw, j):
 
 # build_odoo_product_from_json(o_database, uid, o_password, pj)
 
+# Instantiate the Attribute Builder
 ab = attribute_builder(o_hostname, o_database, o_username, o_password)
+
+# Dump the Attributes already in Odoo
 # ab.dump_attributes()
 
+# Print whether these attributes exist (should initially be "no")  Then create the attributes and try again...
 # if ab.attribute_exists("Size"):
 #     print("Size Exists")
 # else:
 #     print("Size does not Exist")
 # ab.create_attribute("Size")
 
-print("Attribute ID for Finish: {}".format(ab.get_attribute_id("Finish")))
-print("Attribute ID for Size: {}".format(ab.get_attribute_id("Size")))
+# Get at the Attribute ID from the Attribute Name
+# print("Attribute ID for Finish: {}".format(ab.get_attribute_id("Finish")))
+# print("Attribute ID for Size: {}".format(ab.get_attribute_id("Size")))
 
+# Dump all of the Attribute Values
 # ab.dump_attribute_values()
 
+# Create an Attribute Value for an existing Attribute
 # ab.create_attribute_value(1, "Hemlock")
 # ab.dump_attribute_values()
 
-print("Attribute Value ID for Finish:Hemlock: {}".format(ab.get_attribute_value_id(1, "Hemlock")))
-print("Attribute Value ID for Size:XL: {}".format(ab.get_attribute_value_id(2, "XL")))
+# Print Attribute Value Information
+# print("Attribute Value ID for Finish:Hemlock: {}".format(ab.get_attribute_value_id(1, "Hemlock")))
+# print("Attribute Value ID for Size:XL: {}".format(ab.get_attribute_value_id(2, "XL")))
+
+# Import all of the Attributes and Attribute Values from my JSON build files.
+# ab.import_attributes_from_csv("work/attributes.json")
+# ab.import_attribute_values_from_csv("work/attribute_values.json")
+
+

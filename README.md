@@ -30,11 +30,17 @@ This is my "Hello World" experimenting with Odoo's API's.  Also a stash of my no
 * [Odoo Online XML-RPC Note](https://www.odoo.com/fr_FR/forum/aide-1/question/is-xmlrpc-enabled-on-evaluation-servers-81494)
 
 ## TODO:
+* ~~Create an item with multiple attributes/variations~~
+* Move the Product Creation methods from hello_odoo into a product_builder.py class of some sort.
+* Probably move these classes to a models subdirectory, ideally want the test scripts to live in experiments.
+* Create a method for pulling the data from a Product (via Product.Template), then see how multi-axis variations looks in the data file.
+* Create a method to add a product with multiple axis variations.
 * ~~Create attributes and attribute values~~
 * ~~Create a class for doing the work versus a ton of functions in hello_odoo.py~~
-* Create an item with multiple attributes/variations
+* ~~Build the JSON format for importing the attributes~~
 * Build the JSON format for importing the items
-* Import a bunch of data from JSON
+* Save the Import formats into the project
+* ~~Import a bunch of data from JSON~~
 * Describe the process to test with the JSON data
 * Figure out what's up with Odoo ORM and/or the Odoo "high level" openerp (Referenced [here](https://doc.odoo.com/trunk/web/rpc)) Python libraries--is that a thing?
 * Review in more detail: [Odoo ORM Page](https://www.odoo.com/documentation/11.0/reference/orm.html)
