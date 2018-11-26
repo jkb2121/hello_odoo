@@ -164,7 +164,7 @@ def build_odoo_product_from_json(o_db, o_uid, o_pw, j):
                 'attribute_value_ids': [(6, 0, variant['attribute_value_ids'])]
             }])
         else:
-            sku2 = models.execute_kw(o_db, o_uid, o_pw, 'product.product', 'create', [{
+            models.execute_kw(o_db, o_uid, o_pw, 'product.product', 'create', [{
                 'default_code': variant['code'],
                 'code': variant['code'],
                 'product_tmpl_id': prod_tmpl_id,
@@ -209,4 +209,366 @@ ab = attribute_builder(o_hostname, o_database, o_username, o_password)
 # ab.import_attributes_from_csv("work/attributes.json")
 # ab.import_attribute_values_from_csv("work/attribute_values.json")
 
+mjps = {
+   "products":[
+      {
+         "id":"718",
+         "name":"Arata Platform Bed",
+         "prod_id":"1003",
+         "type":"product",
+         "variants":[
+            {
+               "sku":"F-ARA-K-WE/WH",
+               "attributes":[
+                  {
+                     "id":"138",
+                     "name":"Mattress Size",
+                     "value":"King"
+                  },
+                  {
+                     "id":"93",
+                     "name":"Color",
+                     "value":"Wenge/White"
+                  }
+               ]
+            },
+            {
+               "sku":"F-ARA-CK-WE/PG",
+               "type":"product",
+               "attributes":[
+                  {
+                     "id":"138",
+                     "name":"Mattress Size",
+                     "value":"California King"
+                  },
+                  {
+                     "id":"93",
+                     "name":"Color",
+                     "value":"Wenge/Pearl Grey"
+                  }
+               ]
+            },
+            {
+               "sku":"F-ARA-Q-WA/WH",
+               "type":"product",
+               "attributes":[
+                  {
+                     "id":"138",
+                     "name":"Mattress Size",
+                     "value":"Queen"
+                  },
+                  {
+                     "id":"93",
+                     "name":"Color",
+                     "value":"Walunt/White"
+                  }
+               ]
+            },
+            {
+               "sku":"F-ARA-K-GO/WH",
+               "type":"product",
+               "attributes":[
+                  {
+                     "id":"138",
+                     "name":"Mattress Size",
+                     "value":"King"
+                  },
+                  {
+                     "id":"93",
+                     "name":"Color",
+                     "value":"Grey Oak/White"
+                  }
+               ]
+            },
+            {
+               "sku":"F-ARA-Q-WE/WH",
+               "type":"product",
+               "attributes":[
+                  {
+                     "id":"138",
+                     "name":"Mattress Size",
+                     "value":"Queen"
+                  },
+                  {
+                     "id":"93",
+                     "name":"Color",
+                     "value":"Wenge/White"
+                  }
+               ]
+            },
+            {
+               "sku":"F-ARA-K-WE/PG",
+               "type":"product",
+               "attributes":[
+                  {
+                     "id":"138",
+                     "name":"Mattress Size",
+                     "value":"King"
+                  },
+                  {
+                     "id":"93",
+                     "name":"Color",
+                     "value":"Wenge/Pearl Grey"
+                  }
+               ]
+            },
+            {
+               "sku":"F-ARA-CK-WA/WH",
+               "type":"product",
+               "attributes":[
+                  {
+                     "id":"138",
+                     "name":"Mattress Size",
+                     "value":"California King"
+                  },
+                  {
+                     "id":"93",
+                     "name":"Color",
+                     "value":"Walunt/White"
+                  }
+               ]
+            },
+            {
+               "sku":"F-ARA-Q-GO/WH",
+               "type":"product",
+               "attributes":[
+                  {
+                     "id":"138",
+                     "name":"Mattress Size",
+                     "value":"Queen"
+                  },
+                  {
+                     "id":"93",
+                     "name":"Color",
+                     "value":"Grey Oak/White"
+                  }
+               ]
+            },
+            {
+               "sku":"F-ARA-CK-WE/WH",
+               "type":"product",
+               "attributes":[
+                  {
+                     "id":"138",
+                     "name":"Mattress Size",
+                     "value":"California King"
+                  },
+                  {
+                     "id":"93",
+                     "name":"Color",
+                     "value":"Wenge/White"
+                  }
+               ]
+            },
+            {
+               "sku":"F-ARA-Q-WE/PG",
+               "type":"product",
+               "attributes":[
+                  {
+                     "id":"138",
+                     "name":"Mattress Size",
+                     "value":"Queen"
+                  },
+                  {
+                     "id":"93",
+                     "name":"Color",
+                     "value":"Wenge/Pearl Grey"
+                  }
+               ]
+            },
+            {
+               "sku":"F-ARA-K-WA/WH",
+               "type":"product",
+               "attributes":[
+                  {
+                     "id":"138",
+                     "name":"Mattress Size",
+                     "value":"King"
+                  },
+                  {
+                     "id":"93",
+                     "name":"Color",
+                     "value":"Walunt/White"
+                  }
+               ]
+            },
+            {
+               "sku":"F-ARA-CK-GO/WH",
+               "type":"product",
+               "attributes":[
+                  {
+                     "id":"138",
+                     "name":"Mattress Size",
+                     "value":"California King"
+                  },
+                  {
+                     "id":"93",
+                     "name":"Color",
+                     "value":"Grey Oak/White"
+                  }
+               ]
+            }
+         ],
+         "attribute_ids":[
+            {
+               "id":"138",
+               "name":"Mattress Size"
+            },
+            {
+               "id":"93",
+               "name":"Color",
+
+            }
+         ],
+         "attribute_value_ids":[
+            {
+               "value":"King"
+            },
+            {
+               "value":"California King"
+            },
+            {
+               "value":"Queen"
+            }
+         ]
+      }
+   ]
+}
+
+
+
+
+
+
+def build_odoo_product_from_json_multi(o_db, o_uid, o_pw, j):
+    print("Building Odoo Product from JSON (multi)")
+
+    #pprint.pprint(j)
+    print("Product ID/Name/Type: {} / {}  {}".format(j["prod_id"], j["name"], j["type"]))
+
+    # Create Array of Attributes/Values Dictionaries so that we can build the necessary Attribute/Values
+    # relationships on the Product Template, Product Variants and Attribute Lines
+    attribute_line_ids = []
+    attribute_value_ids = []
+    attr = []
+    for pav in j['variants']:
+        for a in pav["attributes"]:
+            print("-SKU: {}: Attribute: {}: Value: {}".format(pav["sku"], a["name"], a["value"]))
+            attr_id = ab.get_attribute_id(a["name"])
+            av_id = ab.get_attribute_value_id(attr_id, a["value"])
+
+            xfound = False
+            for x in attr:
+                if x["id"] == attr_id:
+                    yfound = False
+                    for y in x["values"]:
+                        if y["id"] == av_id:
+                            yfound = True
+                            break
+                    if yfound == False:
+                        x["values"].append({"id": av_id, "name": a["value"]})
+                        attribute_value_ids.append(av_id)
+                    xfound = True
+            if xfound is False:
+                attr.append({"name": a["name"], "id": attr_id, "values": [{"id": av_id, "name": a["value"]}]})
+                attribute_line_ids.append(attr_id)
+    # pprint.pprint(attr)
+
+    print("Attribute_Values Array: {}".format(attribute_value_ids))
+
+    # Create the "Product" via the Product.Template
+    prod_tmpl_id = models.execute_kw(o_db, o_uid, o_pw, 'product.template', 'create', [{
+        'name': j['name'],
+        'type': j['type'],
+        'attribute_line_id': [(6, 0, attribute_line_ids)],
+        'attribute_value_ids': [(6, 0, attribute_value_ids)]
+    }])
+    print("Product Template ID: {}".format(prod_tmpl_id))
+
+
+    # # Get the Product ID Created by the Template
+    sku_output = models.execute_kw(o_db, o_uid, o_pw, 'product.template', 'search_read',
+                                   [[['id', '=', prod_tmpl_id]]],
+                                   {'fields': ['product_variant_ids']}
+                                   )
+    sku1 = sku_output[0]['product_variant_ids'][0]
+
+    # Create Product Attributes Association
+    # For each Attribute, associate it with the Product Template by providing the Attribute ID and All Values
+    for a in attr:
+        av = []
+        for aa in a["values"]:
+            av.append(aa["id"])
+        attribute_line = models.execute_kw(o_db, o_uid, o_pw, 'product.attribute.line', 'create', [{
+            'product_tmpl_id': int(prod_tmpl_id),
+            'attribute_id': a["id"],
+            'value_ids': [(6, 0, av)]
+        }])
+        print("Attribute_Line: {}".format(attribute_line))
+
+
+    i = 0
+    for variant in j['variants']:
+
+        attribute_value_ids = []
+        for a in variant["attributes"]:
+            print("-SKU: {}: Attribute: {}: Value: {}".format(variant["sku"], a["name"], a["value"]))
+
+            attr_id = ab.get_attribute_id(a["name"])
+            av_id = ab.get_attribute_value_id(attr_id, a["value"])
+            attribute_value_ids.append(av_id)
+            print("-AID: {}, AVID:{}".format(attr_id, av_id))
+
+        print("-Attribute Values Array: {}".format(attribute_value_ids))
+
+        if i == 0:
+            print("First Variant: {}".format(variant["sku"]))
+            # Write the First Variant (created by default)
+            models.execute_kw(o_db, o_uid, o_pw, 'product.product', 'write', [[sku1], {
+                'default_code': variant['sku'],
+                'code': variant['sku'],
+                'attribute_value_ids': [(6, 0, attribute_value_ids)]
+            }])
+        else:
+            print("Next Variant: {}".format(variant["sku"]))
+            sku2 = models.execute_kw(o_db, o_uid, o_pw, 'product.product', 'create', [{
+                'default_code': variant['sku'],
+                'code': variant['sku'],
+                'product_tmpl_id': prod_tmpl_id,
+                'type': 'product',
+                # 'attribute_line_id': j['product']['attribute_ids'][0],
+                'attribute_value_ids': [(6, 0, attribute_value_ids)]
+            }])
+
+        i += 1
+
+
+for product in mjps["products"]:
+    ''''''
+    build_odoo_product_from_json_multi(o_database, uid, o_password, product)
+    # print("Product: {}".format(product))
+
+# print("----------------------------------------------------------")
+# output = models.execute_kw(o_database, uid, o_password,
+#                            'product.template', 'search_read',
+#                            [[['id', '=', '838']]],
+#                            )
+# pprint.pprint(output)
+# print("----------------------------------------------------------")
+# # output = models.execute_kw(o_database, uid, o_password,
+# #                            'product.template', 'search_read',
+# #                            [[['id', '=', '842']]],
+# #                            )
+# # pprint.pprint(output)
+# print("----------------------------------------------------------")
+# print("Attribute 743:")
+# ab.dump_attributes()
+# print("----------------------------------------------------------")
+# attribute_lines = models.execute_kw(o_database, uid, o_password,
+#                            'product.attribute.line', 'search_read',
+#                            [],
+#                            )
+# pprint.pprint(attribute_lines)
+# for al in attribute_lines:
+#     print("attribute_lines (id:{}) display_name:{} attribute_id:{}".format(al["id"], al["display_name"], al["attribute_id"]))
 
