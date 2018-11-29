@@ -1,5 +1,5 @@
 odoo_settings:
-    url: 'magento.domainname.com'
+    hostname: 'magento.domainname.com'
     database:  'bitnami_odoo'
     username: 'user@emailaddress.com'
     password: 'password'
