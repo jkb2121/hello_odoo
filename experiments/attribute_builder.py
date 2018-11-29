@@ -1,6 +1,7 @@
 from xmlrpc.client import ServerProxy
 import pprint
 import json
+import ssl
 
 
 class attribute_builder:
@@ -14,7 +15,8 @@ class attribute_builder:
     def __init__(self, hostname, database, username, password):
         # Checking the Odoo version is a good test to see if connection over XML-RPC works, so at least get that out of
         # the way before troubleshooting authentication problems next.
-        self.common = ServerProxy('https://{}/xmlrpc/2/common'.format(hostname))
+        self.common = ServerProxy('https://{}/xmlrpc/2/common'.format(hostname), verbose=False, use_datetime=True,
+                                  context=ssl._create_unverified_context())
 
         self.db = database
         self.password = password
@@ -24,7 +26,8 @@ class attribute_builder:
             print("Credentials Error, check username and password!")
             exit(1)
 
-        self.models = ServerProxy('https://{}/xmlrpc/2/object'.format(hostname))
+        self.models = ServerProxy('https://{}/xmlrpc/2/object'.format(hostname), verbose=False, use_datetime=True,
+                                  context=ssl._create_unverified_context())
         print("Attribute Builder Ready!")
 
     def dump_attributes(self):

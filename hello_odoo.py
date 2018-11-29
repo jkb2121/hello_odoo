@@ -3,7 +3,8 @@ import yaml
 import sys
 import pprint
 
-
+import ssl
+#print(ssl.get_default_verify_paths())
 
 from experiments.attribute_builder import attribute_builder
 
@@ -30,9 +31,11 @@ else:
         print("Error Opening Config File: " + sys.argv[1])
         exit(1)
 
+
 # Checking the Odoo version is a good test to see if connection over XML-RPC works, so at least get that out of the
 # way before troubleshooting authentication problems next.
-common = ServerProxy('https://{}/xmlrpc/2/common'.format(o_hostname))
+common = ServerProxy('https://{}/xmlrpc/2/common'.format(o_hostname), verbose=False, use_datetime=True,
+                     context=ssl._create_unverified_context())
 # print("Version: {}".format(common.version()))
 
 # Login seems to do the same as authenticate (below).
@@ -44,7 +47,8 @@ if uid is False:
     print("Credentials Error, check username and password!")
     exit(1)
 
-models = ServerProxy('https://{}/xmlrpc/2/object'.format(o_hostname))
+models = ServerProxy('https://{}/xmlrpc/2/object'.format(o_hostname), verbose=False, use_datetime=True,
+                     context=ssl._create_unverified_context())
 
 
 # Created this dump_item_data function so I can print out different things about Odoo Products.
@@ -126,54 +130,54 @@ pj = {
 # print("SKU 2: {}".format(pj['product']['variants'][2]['code']))
 
 
-def build_odoo_product_from_json(o_db, o_uid, o_pw, j):
-    print("Building Odoo Product from JSON")
-
-    # Create the "Product" via the Product.Template
-    prod_tmpl_id = models.execute_kw(o_db, o_uid, o_pw, 'product.template', 'create', [{
-        'name': j['product']['name'],
-        'type': j['product']['type'],
-        'attribute_line_id': j['product']['attribute_ids'][0],
-        'attribute_value_ids': [(6, 0, j['product']['variants'][0]['attribute_value_ids'][0])]
-    }])
-    print("Product Template ID: {}".format(prod_tmpl_id))
-
-    # Create Product Attributes
-    attribute_line = models.execute_kw(o_db, o_uid, o_pw, 'product.attribute.line', 'create', [{
-        'product_tmpl_id': int(prod_tmpl_id),
-        'attribute_id': j['product']['attribute_ids'][0],
-        'value_ids': [(6, 0, j['product']['attribute_value_ids'])]
-    }])
-    print("Attribute_Line: {}".format(attribute_line))
-
-    # Get the Product ID Created by the Template
-    sku_output = models.execute_kw(o_db, o_uid, o_pw, 'product.template', 'search_read',
-                                   [[['id', '=', prod_tmpl_id]]],
-                                   {'fields': ['product_variant_ids']}
-                                   )
-    sku1 = sku_output[0]['product_variant_ids'][0]
-
-    i = 0
-    for variant in j['product']['variants']:
-
-        if i == 0:
-            # Write the First Variant (created by default)
-            models.execute_kw(o_db, o_uid, o_pw, 'product.product', 'write', [[sku1], {
-                'default_code': variant['code'],
-                'code': variant['code'],
-                'attribute_value_ids': [(6, 0, variant['attribute_value_ids'])]
-            }])
-        else:
-            models.execute_kw(o_db, o_uid, o_pw, 'product.product', 'create', [{
-                'default_code': variant['code'],
-                'code': variant['code'],
-                'product_tmpl_id': prod_tmpl_id,
-                'type': 'product',
-                'attribute_line_id': j['product']['attribute_ids'][0],
-                'attribute_value_ids': [(6, 0, variant['attribute_value_ids'])]
-            }])
-
-        i += 1
+# def build_odoo_product_from_json(o_db, o_uid, o_pw, j):
+#     print("Building Odoo Product from JSON")
+#
+#     # Create the "Product" via the Product.Template
+#     prod_tmpl_id = models.execute_kw(o_db, o_uid, o_pw, 'product.template', 'create', [{
+#         'name': j['product']['name'],
+#         'type': j['product']['type'],
+#         'attribute_line_id': j['product']['attribute_ids'][0],
+#         'attribute_value_ids': [(6, 0, j['product']['variants'][0]['attribute_value_ids'][0])]
+#     }])
+#     print("Product Template ID: {}".format(prod_tmpl_id))
+#
+#     # Create Product Attributes
+#     attribute_line = models.execute_kw(o_db, o_uid, o_pw, 'product.attribute.line', 'create', [{
+#         'product_tmpl_id': int(prod_tmpl_id),
+#         'attribute_id': j['product']['attribute_ids'][0],
+#         'value_ids': [(6, 0, j['product']['attribute_value_ids'])]
+#     }])
+#     print("Attribute_Line: {}".format(attribute_line))
+#
+#     # Get the Product ID Created by the Template
+#     sku_output = models.execute_kw(o_db, o_uid, o_pw, 'product.template', 'search_read',
+#                                    [[['id', '=', prod_tmpl_id]]],
+#                                    {'fields': ['product_variant_ids']}
+#                                    )
+#     sku1 = sku_output[0]['product_variant_ids'][0]
+#
+#     i = 0
+#     for variant in j['product']['variants']:
+#
+#         if i == 0:
+#             # Write the First Variant (created by default)
+#             models.execute_kw(o_db, o_uid, o_pw, 'product.product', 'write', [[sku1], {
+#                 'default_code': variant['code'],
+#                 'code': variant['code'],
+#                 'attribute_value_ids': [(6, 0, variant['attribute_value_ids'])]
+#             }])
+#         else:
+#             models.execute_kw(o_db, o_uid, o_pw, 'product.product', 'create', [{
+#                 'default_code': variant['code'],
+#                 'code': variant['code'],
+#                 'product_tmpl_id': prod_tmpl_id,
+#                 'type': 'product',
+#                 'attribute_line_id': j['product']['attribute_ids'][0],
+#                 'attribute_value_ids': [(6, 0, variant['attribute_value_ids'])]
+#             }])
+#
+#         i += 1
 
 # build_odoo_product_from_json(o_database, uid, o_password, pj)
 
@@ -435,9 +439,80 @@ mjps = {
    ]
 }
 
+mjps = {
+    "products": [
+        {
+            "id": "777",
+            "name": "Aston Platform Bed",
+            "prod_id": "1006",
+            "type": "product",
+            "variants": [
+                {
+                    "sku": "F-ASTON-K",
+                    "attributes": [
+                        {
+                            "id": "138",
+                            "name": "Mattress Size",
+                            "value": "King"
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-ASTON-Q",
+                    "attributes": [
+                        {
+                            "id": "138",
+                            "name": "Mattress Size",
+                            "value": "Queen"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "778",
+            "name": "Aston Nightstand, Set of 2",
+            "prod_id": "1006",
+            "type": "product",
+            "variants": [
+                {
+                    "sku": "F-ASTON-NS",
+                    "attributes": [
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "779",
+            "name": "Aston Back Rest, Pair",
+            "prod_id": "1119",
+            "type": "product",
+            "variants": [
+                {
+                    "sku": "F-ASTON-BR-WHT",
+                    "attributes": [
+                        {
+                            "id": "138",
+                            "name": "Color",
+                            "value": "White"
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-ASTON-BR-BLK",
+                    "attributes": [
+                        {
+                            "id": "138",
+                            "name": "Color",
+                            "value": "Black"
+                        }
+                    ]
+                }
+            ]
+        }
 
-
-
+    ]
+}
 
 
 def build_odoo_product_from_json_multi(o_db, o_uid, o_pw, j):
