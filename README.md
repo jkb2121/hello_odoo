@@ -30,6 +30,8 @@ This is my "Hello World" experimenting with Odoo's API's.  Also a stash of my no
 * [Odoo Online XML-RPC Note](https://www.odoo.com/fr_FR/forum/aide-1/question/is-xmlrpc-enabled-on-evaluation-servers-81494)
 
 ## TODO:
+* Figure out how to adjust inventory from the xmlrpc API's
+* ~~Solve for self-signed SSL certificate verification~~
 * ~~See TODO in hello_odoo.py about splitting that attributes array of values out by attribute.  I knew better, but thought maybe odoo would automatically handle it.  Yeah, right.  Fortunately, this was just a shortcut i did because I missed the product.attribute.line creation call.  duh.~~
 * ~~Create an item with multiple attributes/variations~~
 * Move the Product Creation methods from hello_odoo into a product_builder.py class of some sort.

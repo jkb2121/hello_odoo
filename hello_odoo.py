@@ -72,6 +72,21 @@ def dump_item_data(o_db, o_uid, o_pw, filters=[], fields=''):
 # dump_item_data(o_database, uid, o_password, [[['id','=', '1104']]])
 # dump_item_data(o_database, uid, o_password, [[['id','=', '1104']]], 'all')
 
+# Set the Inventory Quantity and Standard Cost
+def set_inventory_qty(o_db, o_uid, o_pw, variant_id, qty_on_hand, std_cost=0.01):
+
+    print("Setting Variant ID {} to {} On Hand at {} Unit Cost".format(variant_id, qty_on_hand, std_cost))
+    output = models.execute_kw(o_db, o_uid, o_pw, 'product.product', 'write', [[variant_id], {
+        'standard_price': std_cost,
+        'qty_available': qty_on_hand,
+        'qty_at_date': qty_on_hand,
+        'virtual_available': qty_on_hand,
+        'product_qty': qty_on_hand,
+    }])
+    print("Resulting in....")
+    pprint.pprint(output)
+
+    return output
 
 #
 # With the SKU ID (product variant ID, I suppose), I should be able to update any fields that I want on that object.
@@ -93,36 +108,36 @@ def get_id_by_sku(o_db, o_uid, o_pw, sku):
 # print("SKU ID: {}".format(sku_id))
 
 # This is the example JSON I want to build:
-pj = {
-    'product': {
-        'id': 12345,
-        'type': 'product',
-        'name': 'Nagoya Nightstand',
-        'attribute_ids': [1],               # Finish
-        'attribute_value_ids': [1, 2, 4],      # Caramelized, Sable, Dark Walnut
-        'variants': [
-            {
-                'code': 'F-NS-CARA',
-                'type': 'product',
-                'attribute_ids': [1],
-                'attribute_value_ids': [1]
-            },
-            {
-                'code': 'F-NS-SABL',
-                'type': 'product',
-                'attribute_ids': [1],
-                'attribute_value_ids': [2]
-            },
-            {
-                'code': 'F-NS-DWAL',
-                'type': 'product',
-                'attribute_ids': [1],
-                'attribute_value_ids': [4]
-            }
-
-        ]
-    }
-}
+# pj = {
+#     'product': {
+#         'id': 12345,
+#         'type': 'product',
+#         'name': 'Nagoya Nightstand',
+#         'attribute_ids': [1],               # Finish
+#         'attribute_value_ids': [1, 2, 4],      # Caramelized, Sable, Dark Walnut
+#         'variants': [
+#             {
+#                 'code': 'F-NS-CARA',
+#                 'type': 'product',
+#                 'attribute_ids': [1],
+#                 'attribute_value_ids': [1]
+#             },
+#             {
+#                 'code': 'F-NS-SABL',
+#                 'type': 'product',
+#                 'attribute_ids': [1],
+#                 'attribute_value_ids': [2]
+#             },
+#             {
+#                 'code': 'F-NS-DWAL',
+#                 'type': 'product',
+#                 'attribute_ids': [1],
+#                 'attribute_value_ids': [4]
+#             }
+#
+#         ]
+#     }
+# }
 
 # print("Product: {}".format(pj['product']['id']))
 # print("SKU 1: {}".format(pj['product']['variants'][0]['code']))
@@ -213,306 +228,773 @@ ab = attribute_builder(o_hostname, o_database, o_username, o_password)
 # ab.import_attributes_from_csv("work/attributes.json")
 # ab.import_attribute_values_from_csv("work/attribute_values.json")
 
-mjps = {
-   "products":[
-      {
-         "id":"718",
-         "name":"Arata Platform Bed",
-         "prod_id":"1003",
-         "type":"product",
-         "variants":[
-            {
-               "sku":"F-ARA-K-WE/WH",
-               "attributes":[
-                  {
-                     "id":"138",
-                     "name":"Mattress Size",
-                     "value":"King"
-                  },
-                  {
-                     "id":"93",
-                     "name":"Color",
-                     "value":"Wenge/White"
-                  }
-               ]
-            },
-            {
-               "sku":"F-ARA-CK-WE/PG",
-               "type":"product",
-               "attributes":[
-                  {
-                     "id":"138",
-                     "name":"Mattress Size",
-                     "value":"California King"
-                  },
-                  {
-                     "id":"93",
-                     "name":"Color",
-                     "value":"Wenge/Pearl Grey"
-                  }
-               ]
-            },
-            {
-               "sku":"F-ARA-Q-WA/WH",
-               "type":"product",
-               "attributes":[
-                  {
-                     "id":"138",
-                     "name":"Mattress Size",
-                     "value":"Queen"
-                  },
-                  {
-                     "id":"93",
-                     "name":"Color",
-                     "value":"Walunt/White"
-                  }
-               ]
-            },
-            {
-               "sku":"F-ARA-K-GO/WH",
-               "type":"product",
-               "attributes":[
-                  {
-                     "id":"138",
-                     "name":"Mattress Size",
-                     "value":"King"
-                  },
-                  {
-                     "id":"93",
-                     "name":"Color",
-                     "value":"Grey Oak/White"
-                  }
-               ]
-            },
-            {
-               "sku":"F-ARA-Q-WE/WH",
-               "type":"product",
-               "attributes":[
-                  {
-                     "id":"138",
-                     "name":"Mattress Size",
-                     "value":"Queen"
-                  },
-                  {
-                     "id":"93",
-                     "name":"Color",
-                     "value":"Wenge/White"
-                  }
-               ]
-            },
-            {
-               "sku":"F-ARA-K-WE/PG",
-               "type":"product",
-               "attributes":[
-                  {
-                     "id":"138",
-                     "name":"Mattress Size",
-                     "value":"King"
-                  },
-                  {
-                     "id":"93",
-                     "name":"Color",
-                     "value":"Wenge/Pearl Grey"
-                  }
-               ]
-            },
-            {
-               "sku":"F-ARA-CK-WA/WH",
-               "type":"product",
-               "attributes":[
-                  {
-                     "id":"138",
-                     "name":"Mattress Size",
-                     "value":"California King"
-                  },
-                  {
-                     "id":"93",
-                     "name":"Color",
-                     "value":"Walunt/White"
-                  }
-               ]
-            },
-            {
-               "sku":"F-ARA-Q-GO/WH",
-               "type":"product",
-               "attributes":[
-                  {
-                     "id":"138",
-                     "name":"Mattress Size",
-                     "value":"Queen"
-                  },
-                  {
-                     "id":"93",
-                     "name":"Color",
-                     "value":"Grey Oak/White"
-                  }
-               ]
-            },
-            {
-               "sku":"F-ARA-CK-WE/WH",
-               "type":"product",
-               "attributes":[
-                  {
-                     "id":"138",
-                     "name":"Mattress Size",
-                     "value":"California King"
-                  },
-                  {
-                     "id":"93",
-                     "name":"Color",
-                     "value":"Wenge/White"
-                  }
-               ]
-            },
-            {
-               "sku":"F-ARA-Q-WE/PG",
-               "type":"product",
-               "attributes":[
-                  {
-                     "id":"138",
-                     "name":"Mattress Size",
-                     "value":"Queen"
-                  },
-                  {
-                     "id":"93",
-                     "name":"Color",
-                     "value":"Wenge/Pearl Grey"
-                  }
-               ]
-            },
-            {
-               "sku":"F-ARA-K-WA/WH",
-               "type":"product",
-               "attributes":[
-                  {
-                     "id":"138",
-                     "name":"Mattress Size",
-                     "value":"King"
-                  },
-                  {
-                     "id":"93",
-                     "name":"Color",
-                     "value":"Walunt/White"
-                  }
-               ]
-            },
-            {
-               "sku":"F-ARA-CK-GO/WH",
-               "type":"product",
-               "attributes":[
-                  {
-                     "id":"138",
-                     "name":"Mattress Size",
-                     "value":"California King"
-                  },
-                  {
-                     "id":"93",
-                     "name":"Color",
-                     "value":"Grey Oak/White"
-                  }
-               ]
-            }
-         ],
-         "attribute_ids":[
-            {
-               "id":"138",
-               "name":"Mattress Size"
-            },
-            {
-               "id":"93",
-               "name":"Color",
-
-            }
-         ],
-         "attribute_value_ids":[
-            {
-               "value":"King"
-            },
-            {
-               "value":"California King"
-            },
-            {
-               "value":"Queen"
-            }
-         ]
-      }
-   ]
-}
+# Route ID's:  5 = Buy, 6 = Drop Ship
 
 mjps = {
     "products": [
         {
-            "id": "777",
-            "name": "Aston Platform Bed",
-            "prod_id": "1006",
+            "id": "7777",
+            "name": "Raku High Rise Bed",
+            "prod_id": "1439",
             "type": "product",
+            "route_ids": [6],
             "variants": [
                 {
-                    "sku": "F-ASTON-K",
+                    "sku": "F-RAKU-HI-F-D.WAL",
+                    "price": 649,
                     "attributes": [
                         {
-                            "id": "138",
                             "name": "Mattress Size",
-                            "value": "King"
+                            "value": "Full"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Dark Walnut"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Full / Dark Walnut",
+                            "supplier_code": "10001",
+                            "supplier_cost": 298
                         }
                     ]
                 },
                 {
-                    "sku": "F-ASTON-Q",
+                    "sku": "F-RAKU-HI-F-H.OAK",
+                    "price": 649,
                     "attributes": [
                         {
-                            "id": "138",
+                            "name": "Mattress Size",
+                            "value": "Full"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Honey Oak"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Full / Honey Oak",
+                            "supplier_code": "10002",
+                            "supplier_cost": 298
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HI-F-NAT",
+                    "price": 649,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Full"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Natural"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Full / Natural",
+                            "supplier_code": "10003",
+                            "supplier_cost": 298
+                        }
+                    ]
+                },
+
+                {
+                    "sku": "F-RAKU-HI-K-D.WAL",
+                    "price": 849,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "King"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Dark Walnut"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku King / Dark Walnut",
+                            "supplier_code": "10004",
+                            "supplier_cost": 345
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HI-K-H.OAK",
+                    "price": 849,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "King"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Honey Oak"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku King / Honey Oak",
+                            "supplier_code": "10005",
+                            "supplier_cost": 345
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HI-K-NAT",
+                    "price": 849,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "King"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Natural"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku King / Natural",
+                            "supplier_code": "10006",
+                            "supplier_cost": 345
+                        }
+                    ]
+                },
+
+                {
+                    "sku": "F-RAKU-HI-Q-D.WAL",
+                    "price": 749,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Queen"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Dark Walnut"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Queen / Dark Walnut",
+                            "supplier_code": "10007",
+                            "supplier_cost": 308
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HI-Q-H.OAK",
+                    "price": 749,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Queen"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Honey Oak"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Queen / Honey Oak",
+                            "supplier_code": "10008",
+                            "supplier_cost": 308
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HI-Q-NAT",
+                    "price": 749,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Queen"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Natural"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Queen / Natural",
+                            "supplier_code": "10009",
+                            "supplier_cost": 308
+                        }
+                    ]
+                },
+
+                {
+                    "sku": "F-RAKU-HI-TXL-D.WAL",
+                    "price": 599,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Twin XL"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Dark Walnut"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Twin XL / Dark Walnut",
+                            "supplier_code": "10010",
+                            "supplier_cost": 255
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HI-TXL-H.OAK",
+                    "price": 599,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Twin XL"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Honey Oak"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Twin XL / Honey Oak",
+                            "supplier_code": "10011",
+                            "supplier_cost": 255
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HI-TXL-NAT",
+                    "price": 599,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Twin XL"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Natural"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Twin XL / Natural",
+                            "supplier_code": "10012",
+                            "supplier_cost": 255
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HI-T-D.WAL",
+                    "price": 599,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Twin"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Dark Walnut"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Twin / Dark Walnut",
+                            "supplier_code": "10013",
+                            "supplier_cost": 245
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HI-T-H.OAK",
+                    "price": 599,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Twin"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Honey Oak"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Twin / Honey Oak",
+                            "supplier_code": "10014",
+                            "supplier_cost": 245
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HI-T-NAT",
+                    "price": 599,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Twin"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Natural"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Twin / Natural",
+                            "supplier_code": "10015",
+                            "supplier_cost": 245
+                        }
+                    ]
+                }
+
+            ]
+        },
+        {
+            "id": "7778",
+            "name": "Raku Headboard",
+            "prod_id": "1440",
+            "type": "product",
+            "route_ids": [6],
+            "variants": [
+                {
+                    "sku": "F-RAKU-HB-F-DW",
+                    "price": 199,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Full"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Dark Walnut"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Headboard Full / Dark Walnut",
+                            "supplier_code": "10016",
+                            "supplier_cost": 103
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HB-F-HO",
+                    "price": 199,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Full"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Honey Oak"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Headboard Full / Honey Oak",
+                            "supplier_code": "10017",
+                            "supplier_cost": 103
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HB-F-NAT",
+                    "price": 199,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Full"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Natural"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Headboard Full / Natural",
+                            "supplier_code": "10018",
+                            "supplier_cost": 103
+                        }
+                    ]
+                },
+
+                {
+                    "sku": "F-RAKU-HB-K-DW",
+                    "price": 249,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "King"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Dark Walnut"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Headboard King / Dark Walnut",
+                            "supplier_code": "10019",
+                            "supplier_cost": 115
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HB-K-HO",
+                    "price": 249,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "King"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Honey Oak"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Headboard King / Honey Oak",
+                            "supplier_code": "10020",
+                            "supplier_cost": 115
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HB-K-NAT",
+                    "price": 249,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "King"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Natural"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Headboard King / Natural",
+                            "supplier_code": "10021",
+                            "supplier_cost": 115
+                        }
+                    ]
+                },
+
+                {
+                    "sku": "F-RAKU-HB-Q-DW",
+                    "price": 229,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Queen"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Dark Walnut"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Headboard Queen / Dark Walnut",
+                            "supplier_code": "10022",
+                            "supplier_cost": 105
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HB-Q-HO",
+                    "price": 229,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Queen"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Honey Oak"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Headboard Queen / Honey Oak",
+                            "supplier_code": "10023",
+                            "supplier_cost": 105
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HB-Q-NAT",
+                    "price": 229,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Queen"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Natural"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Headboard Queen / Natural",
+                            "supplier_code": "10024",
+                            "supplier_cost": 105
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HB-T-DW",
+                    "price": 199,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Twin/Twin XL"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Dark Walnut"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Headboard Twin/Twin XL / Dark Walnut",
+                            "supplier_code": "10025",
+                            "supplier_cost": 73
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HB-T-HO",
+                    "price": 199,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Twin/Twin XL"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Honey Oak"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Headboard Twin/Twin XL / Honey Oak",
+                            "supplier_code": "10026",
+                            "supplier_cost": 73
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-HB-T-NAT",
+                    "price": 199,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Twin/Twin XL"
+                        },
+                        {
+                            "name": "Wood Finish",
+                            "value": "Natural"
+                        }
+
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Headboard Twin/Twin XL / Natural",
+                            "supplier_code": "10027",
+                            "supplier_cost": 73
+                        }
+                    ]
+                }
+
+            ]
+        },
+        {
+            "id": "7779",
+            "name": "Raku Tatami Mat",
+            "prod_id": "1441",
+            "type": "product",
+            "route_ids": [6],
+            "variants": [
+                {
+                    "sku": "F-RAKU-TATAMI-F",
+                    "price": 199.50,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "Full"
+                        }
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Tatami Mat Full",
+                            "supplier_code": "10028",
+                            "supplier_cost": 85
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-TATAMI-Q",
+                    "price": 199.50,
+                    "attributes": [
+                        {
                             "name": "Mattress Size",
                             "value": "Queen"
                         }
-                    ]
-                }
-            ]
-        },
-        {
-            "id": "778",
-            "name": "Aston Nightstand, Set of 2",
-            "prod_id": "1006",
-            "type": "product",
-            "variants": [
-                {
-                    "sku": "F-ASTON-NS",
-                    "attributes": [
-                    ]
-                }
-            ]
-        },
-        {
-            "id": "779",
-            "name": "Aston Back Rest, Pair",
-            "prod_id": "1119",
-            "type": "product",
-            "variants": [
-                {
-                    "sku": "F-ASTON-BR-WHT",
-                    "attributes": [
+                    ],
+                    "suppliers": [
                         {
-                            "id": "138",
-                            "name": "Color",
-                            "value": "White"
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Tatami Mat Queen",
+                            "supplier_code": "10029",
+                            "supplier_cost": 85
                         }
                     ]
                 },
                 {
-                    "sku": "F-ASTON-BR-BLK",
+                    "sku": "F-RAKU-TATAMI-T",
+                    "price": 229,
                     "attributes": [
                         {
-                            "id": "138",
-                            "name": "Color",
-                            "value": "Black"
+                            "name": "Mattress Size",
+                            "value": "Twin"
+                        }
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Tatami Mat Twin",
+                            "supplier_code": "10030",
+                            "supplier_cost": 102
+                        }
+                    ]
+                },
+                {
+                    "sku": "F-RAKU-TATAMI-TXL/K",
+                    "price": 249,
+                    "attributes": [
+                        {
+                            "name": "Mattress Size",
+                            "value": "King"
+                        }
+                    ],
+                    "suppliers": [
+                        {
+                            "supplier_odoo_id": 16,
+                            "supplier_name": "Lin's Oriental",
+                            "supplier_product_name": "Lin's Raku Tatami Mat TwinXL/King",
+                            "supplier_code": "10031",
+                            "supplier_cost": 102
                         }
                     ]
                 }
+
             ]
         }
-
     ]
 }
+
+# Twin/Twin XL
 
 
 def build_odoo_product_from_json_multi(o_db, o_uid, o_pw, j):
@@ -555,6 +1037,7 @@ def build_odoo_product_from_json_multi(o_db, o_uid, o_pw, j):
     prod_tmpl_id = models.execute_kw(o_db, o_uid, o_pw, 'product.template', 'create', [{
         'name': j['name'],
         'type': j['type'],
+        'route_ids': [(6, 0, j['route_ids'])],
         'attribute_line_id': [(6, 0, attribute_line_ids)],
         'attribute_value_ids': [(6, 0, attribute_value_ids)]
     }])
@@ -602,26 +1085,41 @@ def build_odoo_product_from_json_multi(o_db, o_uid, o_pw, j):
             models.execute_kw(o_db, o_uid, o_pw, 'product.product', 'write', [[sku1], {
                 'default_code': variant['sku'],
                 'code': variant['sku'],
+                'price': variant['price'],
                 'attribute_value_ids': [(6, 0, attribute_value_ids)]
             }])
+            sku2 = sku1
         else:
             print("Next Variant: {}".format(variant["sku"]))
             sku2 = models.execute_kw(o_db, o_uid, o_pw, 'product.product', 'create', [{
                 'default_code': variant['sku'],
                 'code': variant['sku'],
+                'price': variant['price'],
                 'product_tmpl_id': prod_tmpl_id,
                 'type': 'product',
                 # 'attribute_line_id': j['product']['attribute_ids'][0],
                 'attribute_value_ids': [(6, 0, attribute_value_ids)]
             }])
 
+        # Create Product SupplierInfo Relationship
+
+        for s in variant["suppliers"]:
+            sa = models.execute_kw(o_db, o_uid, o_pw, 'product.supplierinfo', 'create', [{
+                'product_code': s['supplier_code'],
+                'product_id': sku2,
+                'price': s['supplier_cost'],
+                'name': s['supplier_odoo_id'],
+                'product_tmpl_id': prod_tmpl_id,
+                'product_name': s['supplier_product_name'],
+                'display_name': s['supplier_name'],
+            }])
+            print("SupplierInfo:")
+            pprint.pprint(sa)
+
         i += 1
 
 
-for product in mjps["products"]:
-    ''''''
-    build_odoo_product_from_json_multi(o_database, uid, o_password, product)
-    # print("Product: {}".format(product))
+
 
 # print("----------------------------------------------------------")
 # output = models.execute_kw(o_database, uid, o_password,
@@ -647,3 +1145,47 @@ for product in mjps["products"]:
 # for al in attribute_lines:
 #     print("attribute_lines (id:{}) display_name:{} attribute_id:{}".format(al["id"], al["display_name"], al["attribute_id"]))
 
+
+
+# dump_item_data(o_database, uid, o_password, [[['id','=', '1433']]], 'all')
+pprint.pprint(dump_item_data(o_database, uid, o_password, [[['id','=', '1455']]], 'all'))
+pprint.pprint(dump_item_data(o_database, uid, o_password, [[['id','=', '1456']]], 'all'))
+#
+# print("----------------------------------------------------------")
+# output = models.execute_kw(o_database, uid, o_password,
+#                            'product.supplierinfo', 'search_read',
+#                            [],
+#                            )
+# pprint.pprint(output)
+#
+# set_inventory_qty(o_database, uid, o_password, 1455, 75, 13)
+# set_inventory_qty(o_database, uid, o_password, 1456, 76, 7)
+#
+#
+# print("----------------------------------------------------------")
+# output = models.execute_kw(o_database, uid, o_password,
+#                            'stock.change.product.qty', 'create',
+#                            [{
+#                                'location_id': 12,
+#                                'product_id': 1455,
+#                                'total_quantity': 75.0,
+#                                'new_quantity': 75.0,
+#                                'quantity': 75.0,
+#                                'product_tmpl_id': 899
+#                            }]
+#                            )
+# pprint.pprint(output)
+# output = models.execute_kw(o_database, uid, o_password,
+#                            'stock.change.product.qty', 'search_read',
+#                            [],
+#                            )
+# pprint.pprint(output)
+# fields = {'fields': ['id', 'complete_name', 'display_name', 'location_id', 'name']}
+# output = models.execute_kw(o_database, uid, o_password,
+#                            'stock.location', 'search_read',
+#                            [],
+#                            fields)
+# pprint.pprint(output)
+
+for product in mjps["products"]:
+    build_odoo_product_from_json_multi(o_database, uid, o_password, product)
